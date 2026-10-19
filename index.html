@@ -188,12 +188,10 @@
             color: var(--text-color);
             border-bottom: 1px dashed rgba(255, 0, 127, 0.3);
             padding-bottom: 5px;
-            /* NOVO: Efeito de link */
             cursor: pointer;
             transition: color 0.3s, border-color 0.3s, transform 0.2s;
         }
 
-        /* NOVO: Efeito ao passar o mouse no Sumário */
         #toc-list li:hover {
             color: var(--term-color);
             border-bottom-color: var(--term-color);
@@ -233,6 +231,7 @@
             margin-bottom: 15px;
         }
 
+        /* Container dos controles (busca, filtro, download) */
         .controls {
             display: flex;
             flex-direction: column;
@@ -258,6 +257,29 @@
         }
 
         option { background-color: var(--bg-color); }
+
+        /* Estilo do botão de Download */
+        .btn-download {
+            display: block;
+            text-align: center;
+            padding: 15px;
+            background-color: rgba(255, 0, 127, 0.1);
+            color: var(--border-color);
+            text-decoration: none;
+            border: 2px solid var(--border-color);
+            border-radius: 5px;
+            font-weight: bold;
+            font-size: 1.1rem;
+            letter-spacing: 1px;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .btn-download:hover {
+            background-color: var(--border-color);
+            color: var(--text-color);
+            box-shadow: 0 0 20px rgba(255, 0, 127, 0.6);
+        }
 
         .grid-container {
             display: grid;
@@ -424,7 +446,7 @@
                 padding: 0 !important;
             }
 
-            .controls, .btn-scroll, .scroll-indicator {
+            .controls, .btn-scroll, .scroll-indicator, .btn-download {
                 display: none !important;
             }
 
@@ -560,6 +582,9 @@
             <select id="categoryFilter">
                 <option value="">Todas as Categorias</option>
             </select>
+            
+            <!-- LINK ATUALIZADO -->
+            <a href="https://drive.google.com/uc?export=download&id=1YInvT2K4qjMaUYU9hZMJOSsZmsE7Saxk" target="_blank" class="btn-download">📥 BAIXAR EBOOK (PDF)</a>
         </div>
 
         <div class="grid-container" id="glossaryGrid">
@@ -632,17 +657,9 @@
                 const li = document.createElement('li');
                 li.textContent = cat;
                 
-                // ==========================================
-                // NOVO: Evento de clique no item do sumário
-                // ==========================================
                 li.addEventListener('click', () => {
-                    // 1. Atualiza o select de categorias
                     document.getElementById('categoryFilter').value = cat;
-                    
-                    // 2. Executa a função de filtro para atualizar os cards
                     filtrar();
-                    
-                    // 3. Rola a tela suavemente para a seção do glossário
                     document.getElementById('glossario').scrollIntoView({ behavior: 'smooth' });
                 });
                 

@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lexicon Engineer - Guia Terminológico</title>
+    <style>
+        /* ==========================================
+           1. CONFIGURAÇÕES GERAIS E CORES
+           ========================================== */
+        :root {
+            --bg-color: #1a0b2e;
+            --card-bg: rgba(255, 0, 127, 0.05);
+            --border-color: #ff007f;
+            --term-color: #ffff00;
+            --category-color: #00ffff;
+            --text-color: #ffffff;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        * {
+            box-sizing: border-box;
+            word-wrap: break-word; 
+            overflow-wrap: break-word;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: 'Courier New', Courier, monospace;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+        }
+
+        /* ==========================================
+           2. ESTILOS DA CAPA
+           ========================================== */
+        .cover-section {
+            min-height: 100vh;
+            min-height: 100dvh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-image: linear-gradient(rgba(26, 11, 46, 0.7), rgba(26, 11, 46, 0.9)), url('capa.png');
+            background-size: cover;
+            background-position: center center;
+            background-repeat: no-repeat;
+            text-align: center;
+            padding: 20px;
+            border-bottom: 2px solid var(--border-color);
+            position: relative;
+        }
+
+        .cover-content {
+            max-width: 800px;
+            width: 100%;
+            animation: fadeIn 1.5s ease-in-out;
+        }
+
+        .cover-top-tag {
+            color: var(--category-color);
+            font-size: 0.9rem;
+            letter-spacing: 2px;
+            margin-bottom: 20px;
+        }
+
+        .cover-title {
+            color: var(--border-color);
+            font-size: 4rem;
+            margin: 0;
+            text-shadow: 0 0 20px rgba(255, 0, 127, 0.8);
+            letter-spacing: 5px;
+        }
+
+        .cover-subtitle {
+            color: var(--term-color);
+            font-size: 1.3rem;
+            font-weight: normal;
+            margin-top: 10px;
+            margin-bottom: 30px;
+        }
+
+        .cover-divider {
+            height: 2px;
+            width: 60%;
+            margin: 0 auto 30px auto;
+            background: linear-gradient(90deg, transparent, var(--category-color), transparent);
+        }
+
+        .team-label {
+            color: var(--category-color);
+            font-size: 0.8rem;
+            letter-spacing: 3px;
+            margin-bottom: 15px;
+        }
+
+        .team-list {
+            list-style: none;
+            padding: 0;
+            margin: 0 auto 40px auto;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 8px;
+            font-size: 0.9rem;
+            color: var(--text-color);
+            text-align: left;
+            max-width: 600px;
+        }
+
+        .team-list li::before {
+            content: "> ";
+            color: var(--border-color);
+        }
+
+        .btn-scroll {
+            display: inline-block;
+            padding: 15px 30px;
+            background-color: transparent;
+            color: var(--category-color);
+            text-decoration: none;
+            border: 2px solid var(--category-color);
+            border-radius: 5px;
+            font-weight: bold;
+            letter-spacing: 1px;
+            transition: all 0.3s;
+            box-shadow: 0 0 10px rgba(0, 255, 255, 0.2);
+            cursor: pointer;
+        }
+
+        .btn-scroll:hover {
+            background-color: var(--category-color);
+            color: var(--bg-color);
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.6);
+        }
+
+        .scroll-indicator {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: var(--category-color);
+            font-size: 1.5rem;
+            animation: bounce 2s infinite;
+        }
+
+        /* ==========================================
+           3. ESTILOS DO SUMÁRIO
+           ========================================== */
+        .toc-section {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+            background-color: var(--bg-color);
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        .toc-content {
+            max-width: 800px;
+            width: 100%;
+            text-align: center;
+        }
+
+        .toc-content h2 {
+            color: var(--border-color);
+            font-size: 2.5rem;
+            margin-bottom: 30px;
+            text-shadow: 0 0 15px rgba(255, 0, 127, 0.5);
+        }
+
+        #toc-list {
+            list-style: none;
+            padding: 0;
+            margin: 0 auto 40px auto;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            text-align: left;
+            font-size: 1.1rem;
+        }
+
+        #toc-list li {
+            color: var(--text-color);
+            border-bottom: 1px dashed rgba(255, 0, 127, 0.3);
+            padding-bottom: 5px;
+            /* NOVO: Efeito de link */
+            cursor: pointer;
+            transition: color 0.3s, border-color 0.3s, transform 0.2s;
+        }
+
+        /* NOVO: Efeito ao passar o mouse no Sumário */
+        #toc-list li:hover {
+            color: var(--term-color);
+            border-bottom-color: var(--term-color);
+            transform: translateX(5px);
+        }
+
+        #toc-list li::before {
+            content: "■ ";
+            color: var(--category-color);
+            font-size: 0.8rem;
+        }
+
+        /* ==========================================
+           4. ESTILOS DO GLOSSÁRIO (CORPO)
+           ========================================== */
+        .glossary-main {
+            padding: 40px 20px;
+            min-height: 100vh;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .header h2 {
+            color: var(--border-color);
+            font-size: 2.5rem;
+            margin-bottom: 5px;
+            text-shadow: 0 0 10px rgba(255, 0, 127, 0.5);
+            letter-spacing: 2px;
+        }
+        
+        .header .subtitle {
+            color: var(--term-color);
+            font-size: 1.1rem;
+            margin-bottom: 15px;
+        }
+
+        .controls {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            max-width: 800px;
+            margin: 0 auto 40px auto;
+        }
+
+        input, select {
+            padding: 12px;
+            font-size: 1rem;
+            background-color: transparent;
+            border: 2px solid var(--border-color);
+            color: var(--text-color);
+            border-radius: 5px;
+            font-family: inherit;
+            outline: none;
+            width: 100%;
+        }
+
+        input:focus, select:focus {
+            box-shadow: 0 0 10px rgba(255, 0, 127, 0.5);
+        }
+
+        option { background-color: var(--bg-color); }
+
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 20px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .card {
+            border: 2px solid var(--border-color);
+            background-color: var(--card-bg);
+            padding: 20px;
+            border-radius: 8px;
+            transition: transform 0.2s, box-shadow 0.2s;
+            min-width: 0; 
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 0 15px rgba(255, 0, 127, 0.4);
+        }
+
+        .category {
+            color: var(--category-color);
+            font-size: 0.85rem;
+            font-weight: bold;
+            margin-bottom: 8px;
+            display: block;
+            text-transform: uppercase;
+        }
+
+        .term {
+            color: var(--term-color);
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-bottom: 12px;
+        }
+
+        .description {
+            font-size: 0.95rem;
+            line-height: 1.6;
+            text-align: justify;
+        }
+
+        /* ==========================================
+           5. ESTILOS DA CONTRACAPA
+           ========================================== */
+        .backcover-section {
+            min-height: 100vh;
+            min-height: 100dvh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-image: linear-gradient(rgba(26, 11, 46, 0.85), rgba(26, 11, 46, 0.95)), url('contracapa.png');
+            background-size: cover;
+            background-position: center center;
+            background-repeat: no-repeat;
+            padding: 20px;
+            border-top: 2px solid var(--border-color);
+        }
+
+        .backcover-content {
+            max-width: 600px;
+            width: 100%;
+            text-align: center;
+            background-color: rgba(26, 11, 46, 0.8);
+            padding: 40px;
+            border: 1px solid rgba(0, 255, 255, 0.3);
+            border-radius: 10px;
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.8);
+        }
+
+        .backcover-title {
+            color: var(--border-color);
+            font-size: 1.8rem;
+            letter-spacing: 3px;
+            margin-top: 0;
+            margin-bottom: 30px;
+            text-shadow: 0 0 10px rgba(255, 0, 127, 0.5);
+        }
+
+        .backcover-box {
+            text-align: left;
+            color: var(--text-color);
+            font-size: 0.9rem;
+            line-height: 1.6;
+            margin-bottom: 40px;
+        }
+
+        .backcover-box h3 {
+            color: var(--term-color);
+            font-size: 1rem;
+            margin-bottom: 5px;
+            margin-top: 20px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .backcover-box p { margin-top: 0; margin-bottom: 15px; }
+
+        /* ==========================================
+           6. ANIMAÇÕES
+           ========================================== */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0) translateX(-50%); }
+            40% { transform: translateY(-15px) translateX(-50%); }
+            60% { transform: translateY(-7px) translateX(-50%); }
+        }
+
+        /* ==========================================
+           7. RESPONSIVIDADE (TABLETS E CELULARES)
+           ========================================== */
+        @media (max-width: 1024px) {
+            .grid-container { grid-template-columns: repeat(2, 1fr); }
+        }
+
+        @media (max-width: 768px) {
+            .cover-title { font-size: 2.2rem; letter-spacing: 2px; }
+            .cover-subtitle { font-size: 1rem; }
+            .team-list { grid-template-columns: 1fr; text-align: center; font-size: 0.8rem; gap: 5px; }
+            .team-list li::before { content: ""; }
+            .btn-scroll { padding: 12px 20px; font-size: 0.9rem; }
+            
+            .toc-content h2 { font-size: 2rem; }
+            #toc-list { grid-template-columns: 1fr; font-size: 0.95rem; }
+
+            .glossary-main { padding: 20px 15px; }
+            .header h2 { font-size: 1.8rem; }
+            .header .subtitle { font-size: 0.95rem; }
+            .grid-container { grid-template-columns: 1fr; gap: 15px; width: 100%; }
+            .card { padding: 15px; width: 100%; }
+            .term { font-size: 1.1rem; }
+            .description { font-size: 0.85rem; text-align: left; }
+
+            .backcover-content { padding: 25px 15px; }
+            .backcover-title { font-size: 1.3rem; }
+            .backcover-box h3 { font-size: 0.9rem; }
+            .backcover-box p { font-size: 0.85rem; }
+        }
+
+        /* ==========================================
+           8. ESTILOS PARA GERAR O EBOOK DIGITAL (CTRL+P)
+           ========================================== */
+        @media print {
+            @page {
+                size: A4 portrait;
+                margin: 0; 
+            }
+
+            * {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+
+            body {
+                background-color: var(--bg-color) !important;
+                margin: 0 !important;
+                padding: 0 !important;
+            }
+
+            .controls, .btn-scroll, .scroll-indicator {
+                display: none !important;
+            }
+
+            .cover-section {
+                height: 297mm !important; 
+                page-break-after: always; 
+                display: flex !important;
+                align-items: center !important;
+                justify-content: center !important;
+            }
+
+            .toc-section {
+                height: 297mm !important;
+                page-break-before: always;
+                page-break-after: always; 
+                display: flex !important;
+                align-items: center !important;
+                justify-content: center !important;
+            }
+            #toc-list {
+                grid-template-columns: repeat(2, 1fr) !important;
+                font-size: 12pt !important;
+                gap: 20px !important;
+            }
+
+            .glossary-main {
+                padding: 10mm !important; 
+            }
+
+            .header {
+                margin-bottom: 10mm !important;
+            }
+
+            .grid-container {
+                display: grid !important; 
+                grid-template-columns: 1fr 1fr 1fr !important; 
+                gap: 4mm !important;
+                width: 100% !important;
+                max-width: 100% !important;
+            }
+
+            .card {
+                page-break-inside: avoid; 
+                border: 1.5px solid var(--border-color) !important;
+                background-color: rgba(255, 0, 127, 0.05) !important;
+                margin: 0 !important;
+                padding: 3mm !important;
+                box-sizing: border-box !important;
+            }
+
+            .description {
+                text-align: justify !important; 
+                font-size: 7.5pt !important; 
+                line-height: 1.25 !important;
+                hyphens: auto !important;
+                word-break: break-word !important;
+            }
+
+            .term {
+                font-size: 9.5pt !important;
+                margin-bottom: 2mm !important;
+            }
+            
+            .category {
+                font-size: 7pt !important;
+                margin-bottom: 1mm !important;
+            }
+
+            .backcover-section {
+                height: 297mm !important;
+                page-break-before: always; 
+                display: flex !important;
+                align-items: center !important;
+                justify-content: center !important;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ================= CAPA ================= -->
+    <section id="capa" class="cover-section">
+        <div class="cover-content">
+            <div class="cover-top-tag">// ACADEMIC PROJECT - FINC //</div>
+            
+            <h1 class="cover-title">LEXICON ENGINEER</h1>
+            <h2 class="cover-subtitle">Guia Terminológico de Engenharia da Computação</h2>
+            
+            <div class="cover-divider"></div>
+            
+            <p class="team-label">INTEGRANTES</p>
+            <ul class="team-list">
+                <li>Breno Brasil Santiago</li>
+                <li>Cauã Freitas dos Santos</li>
+                <li>Douglas Meneses Lima Oliveira</li>
+                <li>Edilton de Freitas Cerqueira Filho</li>
+                <li>Inacio Augusto Nascimento Santos</li>
+                <li>Luan Vitor Dias de Jesus Maciel</li>
+                <li>Luiz Matheus Oliveira Magno</li>
+                <li>Marcus Vinicius Costa Andrade</li>
+                <li>Ryan Oliveira Borges</li>
+                <li>Saulo Silva Carneiro de Araújo</li>
+                <li>Vinícius de Amorim Bueno</li>
+                <li>Weslley Gabriel Santos Souza</li>
+            </ul>
+            
+            <a href="#sumario" class="btn-scroll">ACESSAR SUMÁRIO ↓</a>
+        </div>
+        <div class="scroll-indicator">▼</div>
+    </section>
+
+    <!-- ================= SUMÁRIO ================= -->
+    <section id="sumario" class="toc-section">
+        <div class="toc-content">
+            <h2>SUMÁRIO</h2>
+            <ul id="toc-list">
+                <!-- Preenchido automaticamente via JavaScript -->
+            </ul>
+            <a href="#glossario" class="btn-scroll">IR PARA O GLOSSÁRIO ↓</a>
+        </div>
+    </section>
+
+    <!-- ================= GLOSSÁRIO ================= -->
+    <main id="glossario" class="glossary-main">
+        <div class="header">
+            <div style="color: var(--category-color); font-size: 0.9rem;">// COMPUTER ENGINEER //</div>
+            <h2>LEXICON ENGINEER</h2>
+            <div class="subtitle">Guia Terminológico de Engenharia da Computação</div>
+        </div>
+
+        <div class="controls">
+            <input type="text" id="searchInput" placeholder="Pesquisar termo ou explicação...">
+            <select id="categoryFilter">
+                <option value="">Todas as Categorias</option>
+            </select>
+        </div>
+
+        <div class="grid-container" id="glossaryGrid">
+            <!-- Os cards serão inseridos via JavaScript -->
+        </div>
+    </main>
+
+    <!-- ================= CONTRACAPA ================= -->
+    <section id="contracapa" class="backcover-section">
+        <div class="backcover-content">
+            <h2 class="backcover-title">FICHA TÉCNICA</h2>
+            
+            <div class="backcover-box">
+                <h3>Sobre o Projeto</h3>
+                <p>O <strong>Lexicon Engineer</strong> é o Glossário Técnico-Acadêmico do Bacharelado em Engenharia da Computação, desenvolvido como Projeto Extensionista Integrador (PEI). Ele reúne, em um único material, os principais termos e conceitos das disciplinas do curso ao longo de oito semestres.</p>
+                
+                <h3>Objetivo e Público-Alvo</h3>
+                <p>Construir e manter um glossário organizado por matéria, com definições claras e uniformes. Destina-se a estudantes e docentes da comunidade acadêmica para revisão de conteúdos, consulta rápida e nivelamento de conhecimentos.</p>
+                
+                <h3>Metodologia</h3>
+                <p>Cada verbete segue o formato <i>Termo: definição</i>. Os termos foram levantados a partir das aulas e bibliografias, redigidos de forma concisa, transpostos para o sumário e indexados para facilitar a consulta.</p>
+                
+                <h3>Desenvolvimento</h3>
+                <p>HTML5, CSS3, JavaScript e Python (para extração e tratamento dos dados).</p>
+            </div>
+
+            <a href="#capa" class="btn-scroll">VOLTAR AO INÍCIO ↑</a>
+        </div>
+    </section>
+
+    <!-- ================= SCRIPTS ================= -->
+    <script>
+        let glossarioData = [];
+
+        async function carregarCSV() {
+            try {
+                const response = await fetch('glossario_final.csv');
+                const csvText = await response.text();
+                
+                const lines = csvText.split('\n');
+                
+                for (let i = 1; i < lines.length; i++) {
+                    if (!lines[i].trim()) continue;
+                    
+                    const matches = lines[i].match(/(".*?"|[^",\s]+)(?=\s*,|\s*$)/g);
+                    if (matches && matches.length >= 3) {
+                        glossarioData.push({
+                            categoria: matches[0].replace(/^"|"$/g, '').trim(),
+                            termo: matches[1].replace(/^"|"$/g, '').trim(),
+                            explicacao: matches[2].replace(/^"|"$/g, '').trim()
+                        });
+                    }
+                }
+                
+                preencherSumario();
+                popularFiltroCategorias();
+                renderizarCards(glossarioData);
+            } catch (error) {
+                console.error("Erro ao carregar o CSV:", error);
+                document.getElementById('glossaryGrid').innerHTML = "<p style='color:red'>Erro ao carregar o glossário. Verifique o console.</p>";
+            }
+        }
+
+        function preencherSumario() {
+            const categorias = [...new Set(glossarioData.map(item => item.categoria))].sort();
+            const tocList = document.getElementById('toc-list');
+            tocList.innerHTML = '';
+            
+            categorias.forEach(cat => {
+                const li = document.createElement('li');
+                li.textContent = cat;
+                
+                // ==========================================
+                // NOVO: Evento de clique no item do sumário
+                // ==========================================
+                li.addEventListener('click', () => {
+                    // 1. Atualiza o select de categorias
+                    document.getElementById('categoryFilter').value = cat;
+                    
+                    // 2. Executa a função de filtro para atualizar os cards
+                    filtrar();
+                    
+                    // 3. Rola a tela suavemente para a seção do glossário
+                    document.getElementById('glossario').scrollIntoView({ behavior: 'smooth' });
+                });
+                
+                tocList.appendChild(li);
+            });
+        }
+
+        function popularFiltroCategorias() {
+            const categorias = [...new Set(glossarioData.map(item => item.categoria))].sort();
+            const select = document.getElementById('categoryFilter');
+            categorias.forEach(cat => {
+                const option = document.createElement('option');
+                option.value = cat;
+                option.textContent = cat;
+                select.appendChild(option);
+            });
+        }
+
+        function renderizarCards(dados) {
+            const grid = document.getElementById('glossaryGrid');
+            grid.innerHTML = '';
+            
+            if (dados.length === 0) {
+                grid.innerHTML = '<p>Nenhum termo encontrado.</p>';
+                return;
+            }
+
+            dados.forEach(item => {
+                const card = document.createElement('div');
+                card.className = 'card';
+                card.innerHTML = `
+                    <span class="category">[${item.categoria}]</span>
+                    <div class="term">${item.termo}</div>
+                    <div class="description">${item.explicacao}</div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        function filtrar() {
+            const termoBusca = document.getElementById('searchInput').value.toLowerCase();
+            const categoriaSelecionada = document.getElementById('categoryFilter').value;
+
+            const filtrados = glossarioData.filter(item => {
+                const matchBusca = item.termo.toLowerCase().includes(termoBusca) || 
+                                   item.explicacao.toLowerCase().includes(termoBusca);
+                const matchCategoria = categoriaSelecionada === "" || item.categoria === categoriaSelecionada;
+                return matchBusca && matchCategoria;
+            });
+
+            renderizarCards(filtrados);
+        }
+
+        document.getElementById('searchInput').addEventListener('input', filtrar);
+        document.getElementById('categoryFilter').addEventListener('change', filtrar);
+
+        carregarCSV();
+    </script>
+</body>
+</html>
